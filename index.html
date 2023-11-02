@@ -9,26 +9,26 @@
 </head>
 <body>
 
-    <form class="w-75 mx-auto">
-        <p class="mt-3">名102前</p>
+    <form class="w-75 mx-auto" id="trainingForm">
+        <p class="mt-3">名11前</p>
         <div>
-            <input class="form-control w-100 mt-1" name="name" placeholder="">
+            <input class="form-control w-100 mt-1" name="name" id="name" placeholder="">
         </div>
         <p class="mt-3">腕立て</p>
         <div>
-            <input class="form-control w-100 mt-1" name="udetate">
+            <input class="form-control w-100 mt-1" name="udetate" id="udetate">
         </div>
         <p class="mt-3">腹筋</p>
         <div>
-            <input class="form-control w-100 mt-1" name="fukkin">
+            <input class="form-control w-100 mt-1" name="fukkin" id="fukkin">
         </div>
         <p class="mt-3">背筋</p>
         <div>
-            <input class="form-control w-100 mt-1" name="haikin">
+            <input class="form-control w-100 mt-1" name="haikin" id="haikin">
         </div>
         <p class="mt-3">スクワット</p>
         <div>
-            <input class="form-control w-100 mt-1" name="sukuwat">
+            <input class="form-control w-100 mt-1" name="sukuwat" id="sukuwat">
         </div>
         <input type="submit" class="mt-4 btn btn-primary" value="送信">
     </form>
@@ -39,7 +39,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
-        
         $(document).ready(function () {
             const liffId = "2001282935-olY64A2j";
             initializeLiff(liffId);
@@ -65,26 +64,38 @@
                 window.alert('Failed to send message ' + error);
             });
         }
-        
-        const params = (new URL(document.location)).searchParams;
-        const key = params.get('key');
 
         $(function () {
-            $('form').submit(function () {
-                const name    = $('input[name="name"]').val();
-                const udetate = $('input[name="udetate"]').val();
-                const fukkin  = $('input[name="fukkin"]').val();
-                const haikin  = $('input[name="haikin"]').val();
-                const sukuwat = $('input[name="sukuwat"]').val();
+            $('#trainingForm').submit(function () {
+                const name    = $('#name').val();
+                const udetate = $('#udetate').val();
+                const fukkin  = $('#fukkin').val();
+                const haikin  = $('#haikin').val();
+                const sukuwat = $('#sukuwat').val();
                 
                 const msg = `${name}\n${udetate}\n${fukkin}\n${haikin}\n${sukuwat}`;
                 sendText(msg);
 
+                // JavaScriptでLINEボットにメッセージを送信
+                const token = "HTc7JHj6Cc1UzZvX2AHLVzrwJS7WKw2EBSHSZeibU+GFXgVoSChvs5WLVJeS0u7Bq09/2s4aBJy4juFLQkwlI5RPZ7nfUyZNRMZNotxan1iBZgtXWpksxe5BYtckUY9M5pInwJ0AHgFMwX4Cl5KR1AdB04t89/1O/w1cDnyilFU=";
+                const url = 'https://api.line.me/v2/bot/message/reply';
+                const messages = [];
+                messages.push({ 'type': 'text', 'text': "Thanks" });
+                const payload = {
+                    'replyToken': replyToken,
+                    'messages': messages
+                };
+                const options = {
+                    'method': 'POST',
+                    'headers': { "Authorization": "Bearer " + token },
+                    'body': JSON.stringify(payload),
+                    'contentType': 'application/json'
+                };
+                fetch(url, options);
+
                 return false;
             });
         });
-
     </script>
-
 </body>
 </html>
