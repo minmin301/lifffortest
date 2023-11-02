@@ -76,7 +76,7 @@
                 
                 const msg = `${name}\n${udetate}\n${fukkin}\n${haikin}\n${sukuwat}`;
                 sendText(msg);
-               /* // LINEボットにメッセージを送信
+                // LINEボットにメッセージを送信
                 const url = 'https://api.line.me/v2/bot/message/reply';
                 const replyToken = getUrlParameter('replyToken'); // replyToken を取得
 
@@ -101,18 +101,18 @@
                     console.log(data);
                     sendText('Thanks');
                 })
-                .catch(error => console.error('Fetch error:', error));*/
+                .catch(error => console.error('Fetch error:', error));
 
                 return false;
             });
         });
 
-        /*function getUrlParameter(name) {
+        function getUrlParameter(name) {
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
             var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
             var results = regex.exec(location.search);
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-        }*/
+        }
     </script>
 </body>
 </html>
