@@ -10,7 +10,7 @@
 <body>
 
     <form class="w-75 mx-auto" id="trainingForm">
-        <p class="mt-3">名104前</p>
+        <p class="mt-3">名前</p>
         <div>
             <input class="form-control w-100 mt-1" name="name" id="name" placeholder="">
         </div>
@@ -54,11 +54,54 @@
             });
         }
 
-        function sendText(text) {
-            liff.sendMessages([{
-                'type': 'text',
-                'text': text
-            }]).then(function () {
+        function sendRichTextMessage(data) {
+            liff.sendMessages([
+                {
+                    type: "flex",
+                    altText: "クーポンカード",
+                    contents: {
+                        type: "bubble",
+                        direction: "ltr",
+                        hero: {
+                            type: "image",
+                            url: "https://example.com/coupon-image.jpg",
+                            size: "full",
+                            aspectRatio: "20:13",
+                            aspectMode: "cover"
+                        },
+                        body: {
+                            type: "box",
+                            layout: "vertical",
+                            contents: [
+                                {
+                                    type: "text",
+                                    text: "特別クーポン",
+                                    weight: "bold",
+                                    size: "xl"
+                                },
+                                {
+                                    type: "text",
+                                    text: "有効期限: 2023-12-31",
+                                    size: "sm",
+                                    color: "#999999"
+                                },
+                                {
+                                    type: "text",
+                                    text: "内容:",
+                                    size: "sm",
+                                    color: "#555555"
+                                },
+                                {
+                                    type: "text",
+                                    text: data,
+                                    size: "sm",
+                                    color: "#555555"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]).then(function () {
                 liff.closeWindow();
             }).catch(function (error) {
                 window.alert('Failed to send message ' + error);
@@ -75,44 +118,11 @@
                 const sukuwat = $('#sukuwat').val();
                 
                 const msg = `${name}\n${udetate}\n${fukkin}\n${haikin}\n${sukuwat}`;
-                sendText(msg);
-                // LINEボットにメッセージを送信
-                const url = 'https://api.line.me/v2/bot/message/reply';
-                const replyToken = getUrlParameter('replyToken'); // replyToken を取得
-
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': '6fjam1J3GY8pdlRYrE7bYAp5T/Zl2dt81V+6XNXJzSkHZY9oo+Y1a+jKbcSrp/5SnMnydN7jIVLwqt2OAibZNpQgxwST82fWT6lIclOC/9XdXtABH6H5wuRDkItbF2FqEZGbgKOz8zeT8mLG6//9DQdB04t89/1O/w1cDnyilFU=' // あなたのチャネルアクセストークン
-                    },
-                    body: JSON.stringify({
-                        replyToken: replyToken,
-                        messages: [
-                            {
-                                type: 'text',
-                                text: msg
-                            }
-                        ]
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    sendText('Thanks');
-                })
-                .catch(error => console.error('Fetch error:', error));
+                sendRichTextMessage(msg);
 
                 return false;
             });
         });
-
-        function getUrlParameter(name) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            var results = regex.exec(location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-        }
     </script>
 </body>
 </html>
