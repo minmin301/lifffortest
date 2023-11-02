@@ -10,7 +10,7 @@
 <body>
 
     <form class="w-75 mx-auto" id="trainingForm">
-        <p class="mt-3">名134前</p>
+        <p class="mt-3">名前</p>
         <div>
             <input class="form-control w-100 mt-1" name="name" id="name" placeholder="">
         </div>
@@ -62,11 +62,12 @@
                 liff.closeWindow();
             }).catch(function (error) {
                 window.alert('Failed to send message ' + error);
-            });
+            }
         }
 
         $(function () {
-            $('#trainingForm').submit(function () {
+            $('#trainingForm').submit(function (event) {
+                event.preventDefault(); // ページ遷移を防ぐ
                 const name    = $('#name').val();
                 const udetate = $('#udetate').val();
                 const fukkin  = $('#fukkin').val();
@@ -74,28 +75,44 @@
                 const sukuwat = $('#sukuwat').val();
                 
                 const msg = `${name}\n${udetate}\n${fukkin}\n${haikin}\n${sukuwat}`;
-                sendText(msg);
-
-               /* // JavaScriptでLINEボットにメッセージを送信
-                const token = "HTc7JHj6Cc1UzZvX2AHLVzrwJS7WKw2EBSHSZeibU+GFXgVoSChvs5WLVJeS0u7Bq09/2s4aBJy4juFLQkwlI5RPZ7nfUyZNRMZNotxan1iBZgtXWpksxe5BYtckUY9M5pInwJ0AHgFMwX4Cl5KR1AdB04t89/1O/w1cDnyilFU=";
+                
+                // LINEボットにメッセージを送信
                 const url = 'https://api.line.me/v2/bot/message/reply';
-                const messages = [];
-                messages.push({ 'type': 'text', 'text': "Thanks" });
-                const payload = {
-                    'replyToken': replyToken,
-                    'messages': messages
-                };
-                const options = {
-                    'method': 'POST',
-                    'headers': { "Authorization": "Bearer " + token },
-                    'body': JSON.stringify(payload),
-                    'contentType': 'application/json'
-                };
-                fetch(url, options);*/
+                const replyToken = getUrlParameter('replyToken'); // replyToken を取得
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_CHANNEL_ACCESS_TOKEN' // あなたのチャネルアクセストークン
+                    },
+                    body: JSON.stringify({
+                        replyToken: replyToken,
+                        messages: [
+                            {
+                                type: 'text',
+                                text: msg
+                            }
+                        ]
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    sendText('Thanks');
+                })
+                .catch(error => console.error('Fetch error:', error));
 
                 return false;
             });
         });
+
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
     </script>
 </body>
 </html>
